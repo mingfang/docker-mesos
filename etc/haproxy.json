@@ -1,0 +1,11 @@
+{
+  "bind": "0.0.0.0:7946",
+  "start_join": ["172.17.0.2:7946"],
+  "leave_on_terminate": true,
+  "tags":{
+    "role": "web",
+    "_frontend": "    acl is_www hdr(host) -i www;    use_backend www if is_www",
+    "frontend": "    default_backend www",
+    "backend": "backend www;    server apache 172.17.0.3:80 check"
+  }
+}

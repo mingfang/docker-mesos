@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker run -v `pwd`:/docker-serf -rm=true -i -t meso /bin/bash
+
