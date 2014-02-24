@@ -1,4 +1,4 @@
 #!/bin/sh
-docker run -p 5050:5050 -p 8081:8080 -P -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/docker -rm=true -i -t mesos /bin/bash
+docker run -p 5050:5050 -p 8080:8080 -p 8081:8081 -P -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/docker -rm=true -i -t mesos /bin/bash
 #docker run -p 5050:5050 -P -v `pwd`:/docker -rm=true -i -t mesos /bin/bash
 

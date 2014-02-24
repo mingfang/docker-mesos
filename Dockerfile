@@ -55,15 +55,22 @@ RUN mkdir -p /var/lib/mesos/executors && \
 RUN wget -O /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
     chmod +x /usr/local/bin/docker
 
+#Chronos
+RUN curl -sSfL http://downloads.mesosphere.io/chronos/chronos-2.1.0_mesos-0.14.0-rc4.tgz --output chronos.tgz && \
+    tar xvf chronos.tgz && \
+    rm chronos.tgz
+
 #Configuration
 
 ADD . /docker
 #RUN ln -s /docker/etc/supervisord-serf.conf /etc/supervisor/conf.d/supervisord-serf.conf
 RUN ln -s /docker/etc/supervisord-ssh.conf /etc/supervisor/conf.d/supervisord-ssh.conf
-RUN ln -s /docker/etc/supervisord-zookeeper.conf /etc/supervisor/conf.d/supervisord-zookeeper.conf
-RUN ln -s /docker/etc/supervisord-master.conf /etc/supervisor/conf.d/supervisord-master.conf
-RUN ln -s /docker/etc/supervisord-marathon.conf /etc/supervisor/conf.d/supervisord-marathon.conf
 RUN ln -s /docker/etc/supervisord-syslog.conf /etc/supervisor/conf.d/supervisord-syslog.conf
+RUN ln -s /docker/etc/supervisord-zookeeper.conf /etc/supervisor/conf.d/supervisord-zookeeper.conf
 RUN ln -s /docker/etc/zoo.cfg /zookeeper/conf/zoo.cfg
+RUN ln -s /docker/etc/supervisord-master.conf /etc/supervisor/conf.d/supervisord-master.conf
+RUN ln -s /docker/etc/supervisord-slave.conf /etc/supervisor/conf.d/supervisord-slave.conf
+RUN ln -s /docker/etc/supervisord-marathon.conf /etc/supervisor/conf.d/supervisord-marathon.conf
+RUN ln -s /docker/etc/supervisord-chronos.conf /etc/supervisor/conf.d/supervisord-chronos.conf
  
-EXPOSE 22 5050 2181 8080 7946
+EXPOSE 22 5050 2181 8080 8081 7946
