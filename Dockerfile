@@ -5,7 +5,7 @@ RUN echo 'deb http://archive.ubuntu.com/ubuntu precise main universe' > /etc/apt
     apt-get update
 
 #Prevent daemon start during install
-RUN dpkg-divert --local --rename --add /sbin/initctl && ln -s /bin/true /sbin/initctl
+RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
 
 #Supervisord
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor && mkdir -p /var/log/supervisor
