@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker run -d serf
+docker run -d mesos
