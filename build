@@ -1,1 +1,1 @@
-docker build -rm=true -t mesos .
+docker build -t mesos .
