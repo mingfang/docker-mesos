@@ -20,9 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-setuptools python-p
 RUN pip install httpie
 
 #Zookeeper
-RUN curl -sSfL http://apache.mirrors.tds.net/zookeeper/zookeeper-3.4.5/zookeeper-3.4.5.tar.gz --output zookeeper.tar.gz && \
-    tar xvf zookeeper.tar.gz && \
-    rm zookeeper.tar.gz && \
+RUN curl -sSfL http://apache.mirrors.tds.net/zookeeper/zookeeper-3.4.5/zookeeper-3.4.5.tar.gz | tar xz && \ 
     mv zookeeper* zookeeper
 
 #Mesos 
