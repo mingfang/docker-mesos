@@ -1,8 +1,6 @@
-FROM ubuntu
+FROM ubuntu:13.10
  
-RUN echo 'deb http://archive.ubuntu.com/ubuntu precise main universe' > /etc/apt/sources.list && \
-    echo 'deb http://archive.ubuntu.com/ubuntu precise-updates main universe' >> /etc/apt/sources.list && \
-    apt-get update
+RUN apt-get update
 
 #Runit
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y runit 
@@ -16,23 +14,23 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server &&	mkdir -p
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less net-tools inetutils-ping curl git telnet nmap socat dnsutils netcat tree htop unzip sudo
 
 #Mesos Requirements
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-setuptools python-protobuf default-jre python-pip sysklogd python2.7-dev libcurl4-nss-dev libsasl2-dev
-RUN pip install httpie
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y zookeeperd default-jre python-setuptools python-protobuf
 
 #Zookeeper
-RUN curl -sSfL http://apache.mirrors.tds.net/zookeeper/zookeeper-3.4.5/zookeeper-3.4.5.tar.gz | tar xz && \ 
-    mv zookeeper* zookeeper
+RUN curl http://www.us.apache.org/dist/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar xz
+RUN mv zookeeper* zookeeper
 
 #Mesos 
-RUN curl -sSfL http://downloads.mesosphere.io/master/ubuntu/12.04/mesos_0.18.0_amd64.deb --output mesos.deb && \
+RUN curl -sSfL http://downloads.mesosphere.io/master/ubuntu/13.10/mesos_0.18.2_amd64.deb --output mesos.deb && \
     dpkg -i mesos.deb && \
     rm mesos.deb
-RUN curl -sSfL http://downloads.mesosphere.io/master/ubuntu/12.04/mesos_0.18.0_amd64.egg --output mesos.egg && \
+RUN curl -sSfL http://downloads.mesosphere.io/master/ubuntu/13.10/mesos_0.18.2_amd64.egg --output mesos.egg && \
     easy_install mesos.egg && \
     rm mesos.egg
 
 #Marathon
-RUN curl -sSfL http://downloads.mesosphere.io/marathon/marathon-0.4.1.tgz | tar xz 
+RUN curl -sSfL http://downloads.mesosphere.io/marathon/marathon-0.5.0/marathon-0.5.0.tgz | tar xz 
+RUN mv marathon* marathon
 
 #Docker
 RUN mkdir -p /var/lib/mesos/executors && \
@@ -44,16 +42,11 @@ RUN wget -O /usr/local/bin/docker https://get.docker.io/builds/Linux/x86_64/dock
 
 #Chronos
 RUN curl -sSfL http://downloads.mesosphere.io/chronos/chronos-2.1.0_mesos-0.14.0-rc4.tgz | tar xz
+#RUN mv chronos* chronos
 
-#Configuration
-ADD . /docker
+#Add runit services
+ADD sv /etc/service 
 
-#Runit Automatically setup all services in the sv directory
-RUN for dir in /docker/sv/*; do echo $dir; chmod +x $dir/run $dir/log/run; ln -s $dir /etc/service/; done
-
-RUN ln -s /docker/etc/zoo.cfg /zookeeper/conf/zoo.cfg
-
-ENV HOME /root
-WORKDIR /root
+ADD etc/zoo.cfg /zookeeper/conf/zoo.cfg
 
 EXPOSE 22 5050 2181 8080 8081 7946
